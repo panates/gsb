@@ -1,0 +1,10 @@
+{
+  "link": [
+    "circular_schama1"
+  ],
+  "typeDefs": {
+    "typ2": {
+      "kind": "scalar"
+    }
+  }
+}

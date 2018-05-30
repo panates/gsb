@@ -1,0 +1,79 @@
+{
+  "typeDefs": {
+    "Query": {
+      "kind": "object",
+      "fields": {
+        "login": {
+          "type": "Boolean"
+        },
+        "hello": {
+          "type": "String",
+          "resolve": "hello"
+        },
+        "lastEpisode": {
+          "type": "Episode"
+        }
+      }
+    },
+    "Episode": {
+      "kind": "enum",
+      "description": "Episodes between I-III",
+      "values": {
+        "EPISODE_I": {
+          "value": 1,
+          "description": "THE PHANTOM MENACE"
+        },
+        "EPISODE_II": {
+          "value": 2,
+          "description": "ATTACK OF THE CLONES"
+        },
+        "EPISODE_III": {
+          "value": 3,
+          "description": "REVENGE OF THE SITH"
+        }
+      }
+    },
+    "Creature": {
+      "kind": "interface",
+      "description": "Creature interface",
+      "fields": {
+        "creatureKind": {
+          "type": "String",
+          "description": "Kind of the living creature"
+        }
+      }
+    },
+    "AnyObject": {
+      "kind": "interface",
+      "fields": {
+        "id": {
+          "type": "UID",
+          "description": "ID of the character"
+        }
+      }
+    },
+    "Character": {
+      "kind": "interface",
+      "extends": "AnyObject",
+      "description": "Character interface",
+      "fields": {
+        "name": {
+          "type": "String",
+          "description": "Name of the character"
+        },
+        "friends": {
+          "type": "[Character]",
+          "description": "Friends of the character"
+        },
+        "appearsIn": {
+          "type": "[Episode!]",
+          "description": "Which episode that character appears in"
+        }
+      }
+    },
+    "UID": {
+      "kind": "scalar",
+      "description": "Unique id"
+    }
+  }
+}

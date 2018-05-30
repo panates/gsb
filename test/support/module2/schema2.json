@@ -1,0 +1,124 @@
+{
+  "link": ["module1/schema1"],
+  "typeDefs": {
+    "Query": {
+      "kind": "object",
+      "fields": {
+        "droid": {
+          "type": "Droid",
+          "args": {
+            "id": {
+              "type": "UID"
+            }
+          }
+        },
+        "jedi": {
+          "type": "Jedi",
+          "args": {
+            "id": {
+              "type": "UID"
+            }
+          }
+        },
+        "hero": "Character"
+      }
+    },
+    "Mutation": {
+      "kind": "object",
+      "fields": {
+        "testMutation": {
+          "type": "Jedi",
+          "args": {
+            "jedi": "JediInput",
+            "episodes": "[Episode!]!",
+            "sides": "[Side]"
+          }
+        }
+      }
+    },
+    "Episode": {
+      "kind": "enum",
+      "extension": true,
+      "description": "Episodes between I-V",
+      "values": {
+        "EPISODE_IV": {
+          "value": 4,
+          "description": "A NEW HOPE"
+        },
+        "EPISODE_V": {
+          "value": 5,
+          "description": "THE EMPIRE STRIKES"
+        }
+      }
+    },
+    "Side": {
+      "kind": "enum",
+      "description": "Side enum",
+      "values": {
+        "DARK": {
+          "value": "D",
+          "description": "Dark side"
+        },
+        "LIGHT": {
+          "value": "L",
+          "description": "light side"
+        }
+      }
+    },
+    "Starship": {
+      "kind": "object",
+      "description": "Starship object",
+      "fields": {
+        "id": "ID!",
+        "name": {
+          "type": "String",
+          "description": "Name of the starship"
+        }
+      }
+    },
+    "Droid": {
+      "kind": "object",
+      "interfaces": "Character",
+      "fields": {
+        "id": "UID!",
+        "primaryFunction": "String"
+      }
+    },
+    "Human": {
+      "kind": "object",
+      "interfaces": [
+        "Character",
+        "Creature"
+      ],
+      "fields": {
+        "id": "UID!",
+        "starships": "[Starship]",
+        "totalCredits": "Float"
+      }
+    },
+    "Jedi": {
+      "kind": "object",
+      "extends": "Human",
+      "fields": {
+        "id": "UID!",
+        "side": "Side",
+        "isDead": "Boolean",
+        "age": "Int"
+      }
+    },
+    "JediInput": {
+      "kind": "input",
+      "fields": {
+        "id": {
+          "type": "UID",
+          "description": "ID of the character"
+        },
+        "name": {
+          "type": "String",
+          "description": "Name of the character"
+        },
+        "side": "Side"
+      }
+    }
+  }
+}

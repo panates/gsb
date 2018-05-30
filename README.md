@@ -9,6 +9,18 @@
 
 GSB 
 
+GSB (GraphQL Schema Builder) provides a better way for building GraphQL schemas.
+
+* Schema linking :
+
+    * Modular schema for modular applications
+    * Builds one schema from separate schemas
+
+* Type extending:
+
+    * Allows type extending which GraphQL does not support for now
+    * Can override fields and arguments
+
 
 ## Node Compatibility
 

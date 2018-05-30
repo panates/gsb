@@ -1,0 +1,18 @@
+{
+  "link": [
+    "module1/schema1"
+  ],
+  "typeDefs": {
+    "Episode": {
+      "kind": "enum",
+      "extension": true,
+      "description": "Episodes between I-VI",
+      "values": {
+        "EPISODE_VI": {
+          "value": 6,
+          "description": "RETURN OF THE JEDI"
+        }
+      }
+    }
+  }
+}
