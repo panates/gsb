@@ -9,7 +9,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should load files by path string', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load('module1/schema1', (err, schema) => {
       if (err)
         return done(err);
@@ -19,7 +19,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should load from object instance', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load(require('./support/module2/schema2'), (err, schema) => {
       if (err)
         return done(err);
@@ -29,7 +29,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should skip if arg is null', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load(null, (err, schema) => {
       if (err)
         return done(err);
@@ -38,7 +38,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should load return Promise', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     const promise = loader.load('module1/schema1');
     promise.then(() => {
       done();
@@ -46,7 +46,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should load linked schemas', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load('module2/schema2', (err, schema) => {
       if (err)
         return done(err);
@@ -58,8 +58,8 @@ describe('SchemaLoader', function() {
   it('should load use custom loader function', function(done) {
     const loader = new SchemaLoader((n) => {
       if (n === 'schema1')
-        return './test/support/module1/schema1';
-      return './test/support/module2/schema2';
+        return './support/module1/schema1';
+      return './support/module2/schema2';
     });
     loader.load('schema1', (err, schema) => {
       if (err)
@@ -92,7 +92,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should throw error when loaded file does not return object instance', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load('module1/invalid_schema', (err) => {
       if (err)
         return done();
@@ -101,7 +101,7 @@ describe('SchemaLoader', function() {
   });
 
   it('should throw error when linked file does not return object instance', function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load({
       link: ['module1/invalid_schema']
     }, (err) => {

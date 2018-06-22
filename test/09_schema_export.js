@@ -7,7 +7,7 @@ describe('Schema Export', function() {
   let schema;
 
   before(function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load({
           link: ['module2/schema2', 'module3/schema3']
         },

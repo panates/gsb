@@ -9,7 +9,7 @@ describe('Schema Export', function() {
   let qlschema;
 
   before(function(done) {
-    const loader = new SchemaLoader('./test/support');
+    const loader = new SchemaLoader('./support');
     loader.load(require('./support/module2/schema2'), (err, sch) => {
       if (err)
         return done(err);
