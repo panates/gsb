@@ -1,5 +1,7 @@
 {
-  "link": ["module1/schema1"],
+  "link": [
+    "module1/schema1"
+  ],
   "typeDefs": {
     "Query": {
       "kind": "object",
@@ -20,7 +22,23 @@
             }
           }
         },
-        "hero": "Character"
+        "hero": "Character",
+        "heros": {
+          "type": "Character",
+          "filter": {
+            "name": "String",
+            "friends": {
+              "type": "Character",
+              "op": [
+                "in"
+              ]
+            }
+          },
+          "orderBy": [
+            "+id",
+            "-+name"
+          ]
+        }
       }
     },
     "Mutation": {

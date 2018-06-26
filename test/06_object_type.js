@@ -85,6 +85,21 @@ describe('ObjectType', function() {
       extends: ['object1', 'object2']
     });
     schema.addCall('resolve1', () => 1);
+    schema.addObjectType('object21', {
+      fields: {
+        a: {
+          type: 'String',
+          filter: {
+            'id': 'int',
+            'name': {type: 'string', op: ['eq', 'like']},
+            'age': {type: 'int', op: ['eq', 'gt', 'lt']},
+            'birth_date': {type: 'Date', op: ['btw']}
+          },
+          orderBy: ['id', '+name', '-+age', '-birth_date']
+        }
+      }
+    });
+
     let v = schema.getType('object1');
     assert.equal(v.kind, 'object');
     assert.equal(v.description, 'object1 desc');
@@ -191,6 +206,37 @@ describe('ObjectType', function() {
       e: {type: '[Int!]'}
     });
     assert.equal(typeof o.isTypeOf, 'function');
+  });
+
+  it('should export (EXPORT_GQL_SIMPLE) - 3', function() {
+    const def = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    let o = def.typeDefs.object21;
+    assert.equal(o.kind, 'object');
+    assert(o.fields.a.args);
+    assert(o.fields.a.args.filter);
+    assert.equal(o.fields.a.args.filter.type, '_object21_a_Filter');
+    assert(o.fields.a.args.orderBy);
+    assert.equal(o.fields.a.args.orderBy.type, '[_object21_a_OrderBy]');
+    o = def.typeDefs._object21_a_Filter;
+    assert(o);
+    assert(o.fields.id_eq);
+    assert.equal(o.fields.id_eq.type, 'int');
+    assert.equal(o.fields.name_eq.type, 'string');
+    assert.equal(o.fields.name_like.type, 'string');
+    assert.equal(o.fields.age_eq.type, 'int');
+    assert.equal(o.fields.age_gt.type, 'int');
+    assert.equal(o.fields.age_lt.type, 'int');
+    assert.equal(o.fields.birth_date_btw.type, '[Date]');
+    o = def.typeDefs._object21_a_OrderBy;
+    assert(o);
+    assert.equal(o.values.id, '+id');
+    assert.equal(o.values.id_dsc, undefined);
+    assert.equal(o.values.name, '+name');
+    assert.equal(o.values.name_dsc, undefined);
+    assert.equal(o.values.age, '+age');
+    assert.equal(o.values.age_dsc, '-age');
+    assert.equal(o.values.birth_date, undefined);
+    assert.equal(o.values.birth_date_dsc, '-birth_date');
   });
 
   it('should export (EXPORT_GQL_PURE)', function() {
