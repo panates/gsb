@@ -219,24 +219,24 @@ describe('ObjectType', function() {
     assert.equal(o.fields.a.args.orderBy.type, '[_object21_a_OrderBy]');
     o = def.typeDefs._object21_a_Filter;
     assert(o);
-    assert(o.fields.id_eq);
-    assert.equal(o.fields.id_eq.type, 'int');
-    assert.equal(o.fields.name_eq.type, 'string');
+    assert(o.fields.id);
+    assert.equal(o.fields.id.type, 'int');
+    assert.equal(o.fields.name.type, 'string');
     assert.equal(o.fields.name_like.type, 'string');
-    assert.equal(o.fields.age_eq.type, 'int');
+    assert.equal(o.fields.age.type, 'int');
     assert.equal(o.fields.age_gt.type, 'int');
     assert.equal(o.fields.age_lt.type, 'int');
     assert.equal(o.fields.birth_date_btw.type, '[Date]');
     o = def.typeDefs._object21_a_OrderBy;
     assert(o);
-    assert.equal(o.values.id, '+id');
+    assert.equal(o.values.id.value, '+id');
     assert.equal(o.values.id_dsc, undefined);
-    assert.equal(o.values.name, '+name');
+    assert.equal(o.values.name.value, '+name');
     assert.equal(o.values.name_dsc, undefined);
-    assert.equal(o.values.age, '+age');
-    assert.equal(o.values.age_dsc, '-age');
+    assert.equal(o.values.age.value, '+age');
+    assert.equal(o.values.age_dsc.value, '-age');
     assert.equal(o.values.birth_date, undefined);
-    assert.equal(o.values.birth_date_dsc, '-birth_date');
+    assert.equal(o.values.birth_date_dsc.value, '-birth_date');
   });
 
   it('should export (EXPORT_GQL_PURE)', function() {

@@ -22,9 +22,7 @@ Object.assign(module.exports, {
       },
       lastEpisode: [
         'authenticate',
-        () => {
-          return 'EPISODE_III';
-        }]
+        () => 3]
     }
   },
 

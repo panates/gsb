@@ -20,13 +20,13 @@
     "errorex": "^1.0.6",
     "graphql": "^0.13.2",
     "putil-isplainobject": "^1.0.1",
-    "putil-merge": "^1.2.0",
+    "putil-merge": "^2.0.0",
     "putil-promisify": "^1.1.0",
     "putil-walkdir": "^2.0.1",
-    "putil-waterfall": "^1.1.5"
+    "putil-waterfall": "^1.1.6"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.3",
+    "babel-eslint": "^8.2.5",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "istanbul": "^0.4.5",

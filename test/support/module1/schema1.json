@@ -68,6 +68,10 @@
         "appearsIn": {
           "type": "[Episode!]",
           "description": "Which episode that character appears in"
+        },
+        "notes": {
+          "type": "String",
+          "description": "Notes for the character"
         }
       }
     },

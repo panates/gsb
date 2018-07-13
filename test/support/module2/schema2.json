@@ -23,12 +23,12 @@
           }
         },
         "hero": "Character",
-        "heros": {
-          "type": "Character",
+        "heroes": {
+          "type": "[Character]",
           "filter": {
-            "name": "String",
+            "id": "String",
             "friends": {
-              "type": "Character",
+              "type": "String",
               "op": [
                 "in"
               ]
