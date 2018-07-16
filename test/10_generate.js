@@ -19,7 +19,11 @@ describe('Schema Export', function() {
   });
 
   it('should generate GraphQL schema', function() {
-    qlschema = schema.generate();
+    qlschema = schema.generate({
+      resolve: (_, __, ctx, info) => {
+        info.modified = true;
+      }
+    });
     assert(qlschema instanceof GraphQLSchema, 'Failed');
   });
 
@@ -82,6 +86,7 @@ describe('Schema Export', function() {
             assert(v.data.heroes);
             assert.equal(v.data.heroes.length, 1);
             assert.equal(v.data.heroes[0].id, 1);
+            assert.equal(v.data.heroes[0].name, 'Luke Skywalker');
             assert.equal(v.data.heroes[0].notes, 1);
             done();
           })

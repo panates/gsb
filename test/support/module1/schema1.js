@@ -30,9 +30,11 @@ Object.assign(module.exports, {
     hello: () => {
       return 'world';
     },
-    authenticate: (parent, v) => {
+    authenticate: (parent, v, ctx, info) => {
       if (!authenticated)
         throw new Error('Not authenticated');
+      if (!info.modified)
+        throw new Error('Info is not modified');
     },
     ignoreThis: 123
   }
