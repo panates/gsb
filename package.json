@@ -8,7 +8,6 @@
   ],
   "license": "MIT",
   "repository": "panates/gsb",
-  "main": "lib/index.js",
   "keywords": [
     "javascript",
     "graphql",

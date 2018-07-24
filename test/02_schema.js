@@ -1,21 +1,16 @@
 /* eslint-disable */
+
 const assert = require('assert');
-const {Schema} = require('../lib/index');
+const path = require('path');
+const promisify = require('putil-promisify');
+const {Schema} = require('../index');
+
+const fileMapper = (v) => path.resolve('test/support', v);
 
 describe('Schema', function() {
 
   it('should construct', function() {
     new Schema();
-  });
-
-  it('should load object definition', function() {
-    const schema1 = new Schema(require('./support/module1/schema1'));
-    const episode = schema1.getType('Episode');
-    const query = schema1.getType('Query');
-    assert(episode);
-    assert(query);
-    assert.equal(episode.kind, 'enum');
-    assert.equal(query.kind, 'object');
   });
 
   it('should add enum type', function() {
@@ -153,9 +148,19 @@ describe('Schema', function() {
     assert(0, 'Failed');
   });
 
-  it('should load schema from json object', function() {
+  it('should initialize with definition', function() {
+    const schema1 = new Schema(require('./support/module1/schema1'));
+    const episode = schema1.getType('Episode');
+    const query = schema1.getType('Query');
+    assert(episode);
+    assert(query);
+    assert.equal(episode.kind, 'enum');
+    assert.equal(query.kind, 'object');
+  });
+
+  it('should load schema from json object', async function() {
     let schema1 = new Schema();
-    schema1.load({
+    await schema1.load({
       typeDefs: {
         UUID: {
           kind: 'scalar'
@@ -193,7 +198,7 @@ describe('Schema', function() {
     });
     assert.equal(schema1.getType('UUID').kind, 'scalar');
 
-    schema1.load({
+    await schema1.load({
       calls: {
         a: () => true
       },
@@ -221,23 +226,15 @@ describe('Schema', function() {
     assert.equal(typeof schema1.getType('UUID').serialize, 'function');
     assert.equal(typeof schema1.getType('interface1').resolveType, 'function');
     assert.equal(typeof schema1.getType('object1').isTypeOf, 'function');
-    assert.equal(typeof schema1.getType('object1').fields.get('a').resolve, 'function');
+    assert.equal(typeof schema1.getType('object1')
+        .fields
+        .get('a').resolve, 'function');
     schema1.getType('input1');
   });
 
-  it('should validate argument of load() function', function() {
-    const schema1 = new Schema();
-    try {
-      schema1.load([]);
-    } catch (e) {
-      return;
-    }
-    assert(0, 'Failed');
-  });
-
-  it('should getCall() throw error when given name not found', function() {
+  it('should getCall() throw error when given name not found', async function() {
     let schema1 = new Schema();
-    schema1.load({
+    await schema1.load({
       typeDefs: {
         Episode: {
           kind: 'enum'
@@ -249,6 +246,79 @@ describe('Schema', function() {
     assert.equal(typeof o.typeDefs, 'object');
     assert.equal(typeof o.typeDefs.Episode, 'object');
     assert.equal(o.typeDefs.Episode.kind, 'enum');
+  });
+
+  it('should validate argument of load() function', async function() {
+    const schema1 = new Schema();
+    try {
+      await schema1.load([]);
+    } catch (e) {
+      return;
+    }
+    assert(0, 'Failed');
+  });
+
+  it('should load return Promise', function() {
+    const schema = new Schema();
+    const promise = schema.load('module1/schema1');
+    assert(promisify.isPromise(promise), 'Failed');
+  });
+
+  it('should load files by path string', async function() {
+    const schema = new Schema();
+    await schema.load('module1/schema1', fileMapper);
+    assert.equal(schema.getType('Character').kind, 'interface');
+  });
+
+  it('should load from object instance', async function() {
+    const schema = new Schema();
+    await schema.load(require('./support/module2/schema2'), fileMapper);
+    assert.equal(schema.getType('Episode').kind, 'enum');
+  });
+
+  it('should skip if arg is null', async function() {
+    const schema = new Schema();
+    await schema.load(null);
+  });
+
+  it('should load linked schemas', async function() {
+    const schema = new Schema();
+    await schema.load('module2/schema2', fileMapper);
+    assert.equal(schema.links.size, 1);
+  });
+
+  it('should cancel load when custom loader throws error', function(done) {
+    const schema = new Schema();
+    const p = schema.load('schema1', (n) => {
+      throw new Error('Any error');
+    });
+    p.then(() => done('Failed'))
+        .catch(() => done());
+  });
+
+  it('should cancel load when custom loader returns rejected promise', function(done) {
+    const schema = new Schema();
+    const p = schema.load('schema1', (n) => {
+      return Promise.reject(new Error('Any error'));
+    });
+    p.then(() => done('Failed'))
+        .catch(() => done());
+  });
+
+  it('should throw error when loaded file does not return object instance', function(done) {
+    const schema = new Schema();
+    const p = schema.load('module1/invalid_schema', fileMapper);
+    p.then(() => done('Failed'))
+        .catch(() => done());
+  });
+
+  it('should throw error when linked file does not return object instance', function(done) {
+    const schema = new Schema();
+    const p = schema.load({
+      link: ['module1/invalid_schema']
+    }, fileMapper);
+    p.then(() => done('Failed'))
+        .catch(() => done());
   });
 
 });

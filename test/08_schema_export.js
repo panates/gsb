@@ -1,22 +1,19 @@
 /* eslint-disable */
 const assert = require('assert');
-const {SchemaLoader, Schema} = require('../lib/index');
+const path = require('path');
+const {SchemaLoader, Schema} = require('../index');
+
+const fileMapper = (v) => path.resolve('test/support', v);
 
 describe('Schema Export', function() {
 
   let schema;
 
-  before(function(done) {
-    const loader = new SchemaLoader('./support');
-    loader.load({
-          link: ['module2/schema2', 'module3/schema3']
-        },
-        (err, sch) => {
-          if (err)
-            return done(err);
-          schema = sch;
-          done();
-        });
+  before(async function() {
+    schema = new Schema();
+    await schema.load({
+      link: ['module2/schema2', 'module3/schema3']
+    }, fileMapper);
   });
 
   it('should export (EXPORT_GSB)', function() {

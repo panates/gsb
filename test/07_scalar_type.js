@@ -1,6 +1,6 @@
 /* eslint-disable */
 const assert = require('assert');
-const {Schema} = require('../lib/index');
+const {Schema} = require('../index');
 
 describe('ScalarType', function() {
 

@@ -1,21 +1,19 @@
 /* eslint-disable */
 const assert = require('assert');
-const {SchemaLoader, Schema} = require('../lib/index');
+const path = require('path');
+const {Schema} = require('../index');
 const {graphql, GraphQLSchema} = require('graphql');
+
+const fileMapper = (v) => path.resolve('test/support', v);
 
 describe('Schema Export', function() {
 
   let schema;
   let qlschema;
 
-  before(function(done) {
-    const loader = new SchemaLoader('./support');
-    loader.load(require('./support/module2/schema2'), (err, sch) => {
-      if (err)
-        return done(err);
-      schema = sch;
-      done();
-    });
+  before(async function() {
+    schema = new Schema();
+    await schema.load('module2/schema2', fileMapper);
   });
 
   it('should generate GraphQL schema', function() {
