@@ -260,7 +260,7 @@ describe('Schema', function() {
 
   it('should load return Promise', function() {
     const schema = new Schema();
-    const promise = schema.load('module1/schema1');
+    const promise = schema.load('module1/schema1', fileMapper);
     assert(promisify.isPromise(promise), 'Failed');
   });
 
