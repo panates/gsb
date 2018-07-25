@@ -38,6 +38,7 @@
   "files": [
     "LICENSE",
     "README.md",
+    "index.js",
     "lib/"
   ],
   "scripts": {
