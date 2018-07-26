@@ -95,7 +95,9 @@ describe('ObjectType', function() {
             'age': {type: 'int', op: ['eq', 'gt', 'lt']},
             'birth_date': {type: 'Date', op: ['btw']}
           },
-          orderBy: ['id', '+name', '-+age', '-birth_date']
+          orderBy: ['id', '+name', '-+age', '-birth_date'],
+          limit: 100,
+          offset: true
         }
       }
     });
@@ -217,6 +219,9 @@ describe('ObjectType', function() {
     assert.equal(o.fields.a.args.filter.type, '_object21_a_Filter');
     assert(o.fields.a.args.orderBy);
     assert.equal(o.fields.a.args.orderBy.type, '[_object21_a_OrderBy]');
+    assert.equal(o.fields.a.args.limit.type, 'Int');
+    assert.equal(o.fields.a.args.limit.defaultValue, 100);
+    assert.equal(o.fields.a.args.offset.type, 'Int');
     o = def.typeDefs._object21_a_Filter;
     assert(o);
     assert(o.fields.id);
