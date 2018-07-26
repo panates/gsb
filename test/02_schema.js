@@ -321,4 +321,20 @@ describe('Schema', function() {
         .catch(() => done());
   });
 
+  it('should load all if load callback returns array', async function() {
+    const schema = new Schema();
+    await schema.load('*', (v) => {
+      if (v === '*') {
+        return ['module1/schema1', 'module1/schema2'];
+      }
+      return fileMapper(v);
+    });
+    const episode = schema.getType('Episode');
+    const query = schema.getType('Query');
+    assert(episode);
+    assert(query);
+    assert.equal(episode.kind, 'enum');
+    assert.equal(query.kind, 'object');
+  });
+
 });
