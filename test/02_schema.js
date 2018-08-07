@@ -148,8 +148,9 @@ describe('Schema', function() {
     assert(0, 'Failed');
   });
 
-  it('should initialize with definition', function() {
-    const schema1 = new Schema(require('./support/module1/schema1'));
+  it('should initialize with definition', async function() {
+    const schema1 = new Schema();
+    await schema1.load(require('./support/module1/schema1'));
     const episode = schema1.getType('Episode');
     const query = schema1.getType('Query');
     assert(episode);
@@ -251,7 +252,7 @@ describe('Schema', function() {
   it('should validate argument of load() function', async function() {
     const schema1 = new Schema();
     try {
-      await schema1.load([]);
+      await schema1.load(123);
     } catch (e) {
       return;
     }

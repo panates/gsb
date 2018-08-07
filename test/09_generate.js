@@ -13,7 +13,7 @@ describe('Schema Export', function() {
 
   before(async function() {
     schema = new Schema();
-    await schema.load('module2/schema2', fileMapper);
+    await schema.load('module2/schema2', {intoption: 1}, fileMapper);
   });
 
   it('should generate GraphQL schema', function() {
@@ -89,6 +89,18 @@ describe('Schema Export', function() {
             done();
           })
           .catch((err) => done('Failed:' + err.message));
+    });
+
+    it('Should call "testfn" and return initializer options', function(done) {
+      graphql(qlschema, '{ testfn }')
+          .then((v) => {
+            if (v.errors)
+              return done(v.errors);
+            assert(v.data.testfn);
+            assert.equal(v.data.testfn, 1);
+            done();
+          })
+          .catch((err) => done(err));
     });
 
   });

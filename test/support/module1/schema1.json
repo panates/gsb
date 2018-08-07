@@ -12,6 +12,9 @@
         },
         "lastEpisode": {
           "type": "Episode"
+        },
+        "testfn": {
+          "type": "Int"
         }
       }
     },
