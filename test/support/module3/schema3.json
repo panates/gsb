@@ -1,6 +1,6 @@
 {
   "link": [
-    "module1/schema1"
+    "/module1/schema1"
   ],
   "typeDefs": {
     "Episode": {

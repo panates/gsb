@@ -4,7 +4,7 @@ const path = require('path');
 const {Schema} = require('../index');
 const {graphql, GraphQLSchema} = require('graphql');
 
-const fileMapper = (v) => path.resolve('test/support', v);
+const opts = {rootPath: path.resolve('./test/support'), intoption: 1};
 
 describe('Schema Export', function() {
 
@@ -13,7 +13,7 @@ describe('Schema Export', function() {
 
   before(async function() {
     schema = new Schema();
-    await schema.load('module2/schema2', {intoption: 1}, fileMapper);
+    await schema.load('module2/schema2', opts);
   });
 
   it('should generate GraphQL schema', function() {

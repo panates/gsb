@@ -3,7 +3,7 @@ const assert = require('assert');
 const path = require('path');
 const {SchemaLoader, Schema} = require('../index');
 
-const fileMapper = (v) => path.resolve('test/support', v);
+const opts = {rootPath: path.resolve('./test/support')};
 
 describe('Schema Export', function() {
 
@@ -12,8 +12,8 @@ describe('Schema Export', function() {
   before(async function() {
     schema = new Schema();
     await schema.load({
-      link: ['module2/schema2', 'module3/schema3']
-    }, fileMapper);
+      link: ['/module2/schema2', '/module3/schema3']
+    }, opts);
   });
 
   it('should export (EXPORT_GSB)', function() {

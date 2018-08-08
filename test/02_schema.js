@@ -5,7 +5,7 @@ const path = require('path');
 const promisify = require('putil-promisify');
 const {Schema} = require('../index');
 
-const fileMapper = (v) => path.resolve('test/support', v);
+const opts = {rootPath: path.resolve('./test/support')};
 
 describe('Schema', function() {
 
@@ -261,19 +261,19 @@ describe('Schema', function() {
 
   it('should load return Promise', function() {
     const schema = new Schema();
-    const promise = schema.load('module1/schema1', fileMapper);
+    const promise = schema.load('/module1/schema1');
     assert(promisify.isPromise(promise), 'Failed');
   });
 
   it('should load files by path string', async function() {
     const schema = new Schema();
-    await schema.load('module1/schema1', fileMapper);
+    await schema.load('/module1/schema1', opts);
     assert.equal(schema.getType('Character').kind, 'interface');
   });
 
   it('should load from object instance', async function() {
     const schema = new Schema();
-    await schema.load(require('./support/module2/schema2'), fileMapper);
+    await schema.load(require('./support/module2/schema2'), opts);
     assert.equal(schema.getType('Episode').kind, 'enum');
   });
 
@@ -284,7 +284,7 @@ describe('Schema', function() {
 
   it('should load linked schemas', async function() {
     const schema = new Schema();
-    await schema.load('module2/schema2', fileMapper);
+    await schema.load('/module2/schema2', opts);
     assert.equal(schema.links.size, 1);
   });
 
@@ -308,7 +308,7 @@ describe('Schema', function() {
 
   it('should throw error when loaded file does not return object instance', function(done) {
     const schema = new Schema();
-    const p = schema.load('module1/invalid_schema', fileMapper);
+    const p = schema.load('/module1/invalid_schema', opts);
     p.then(() => done('Failed'))
         .catch(() => done());
   });
@@ -316,26 +316,10 @@ describe('Schema', function() {
   it('should throw error when linked file does not return object instance', function(done) {
     const schema = new Schema();
     const p = schema.load({
-      link: ['module1/invalid_schema']
-    }, fileMapper);
+      link: ['/module1/invalid_schema']
+    }, opts);
     p.then(() => done('Failed'))
         .catch(() => done());
-  });
-
-  it('should load all if load callback returns array', async function() {
-    const schema = new Schema();
-    await schema.load('*', (v) => {
-      if (v === '*') {
-        return ['module1/schema1', 'module1/schema2'];
-      }
-      return fileMapper(v);
-    });
-    const episode = schema.getType('Episode');
-    const query = schema.getType('Query');
-    assert(episode);
-    assert(query);
-    assert.equal(episode.kind, 'enum');
-    assert.equal(query.kind, 'object');
   });
 
 });
