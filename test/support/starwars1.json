@@ -1,20 +1,12 @@
 {
+  "links": ["common.js"],
+  "namespace": "starwars1",
   "typeDefs": {
     "Query": {
       "kind": "object",
       "fields": {
-        "login": {
-          "type": "Boolean"
-        },
-        "hello": {
-          "type": "String",
-          "resolve": "hello"
-        },
         "lastEpisode": {
           "type": "Episode"
-        },
-        "testfn": {
-          "type": "Int"
         }
       }
     },
@@ -77,10 +69,6 @@
           "description": "Notes for the character"
         }
       }
-    },
-    "UID": {
-      "kind": "scalar",
-      "description": "Unique id"
     }
   }
 }

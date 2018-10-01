@@ -2,18 +2,18 @@
 const assert = require('assert');
 const path = require('path');
 const {Schema} = require('../index');
-const {graphql, GraphQLSchema} = require('graphql');
+const {graphql, GraphQLSchema, printSchema} = require('graphql');
 
-const opts = {rootPath: path.resolve('./test/support'), intoption: 1};
-
-describe('Schema Export', function() {
+describe('Schema generate', function() {
 
   let schema;
   let qlschema;
 
-  before(async function() {
-    schema = new Schema();
-    await schema.load('module2/schema2', opts);
+  before(function() {
+    return Schema.fromFile('./test/support/testapp.json', null, {intoption: 1})
+        .then(sch => {
+          schema = sch;
+        });
   });
 
   it('should generate GraphQL schema', function() {

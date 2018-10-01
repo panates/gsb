@@ -1,0 +1,7 @@
+{
+  "namespace": "testapp",
+  "links": [
+    "starwars2.js",
+    "starwars3.json"
+  ]
+}

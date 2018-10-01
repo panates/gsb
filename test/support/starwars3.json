@@ -1,6 +1,7 @@
 {
-  "link": [
-    "/module1/schema1"
+  "namespace": "schema3",
+  "links": [
+    "#starwars1.js"
   ],
   "typeDefs": {
     "Episode": {

@@ -1,4 +1,4 @@
-module.exports = require('./schema2.json');
+module.exports = Object.assign({}, require('./starwars2.json'));
 
 Object.assign(module.exports, {
 

@@ -1,6 +1,7 @@
 {
-  "link": [
-    "/module1/schema1"
+  "namespace": "schema2",
+  "links": [
+    "starwars1.js"
   ],
   "typeDefs": {
     "Query": {
@@ -34,7 +35,7 @@
               ]
             }
           },
-          "orderBy": [
+          "sort": [
             "+id",
             "-+name"
           ]

@@ -95,7 +95,7 @@ describe('ObjectType', function() {
             'age': {type: 'int', op: ['eq', 'gt', 'lt']},
             'birth_date': {type: 'Date', op: ['btw']}
           },
-          orderBy: ['id', '+name', '-+age', '-birth_date'],
+          sort: ['id', '+name', '-+age', '-birth_date'],
           limit: 100,
           offset: true
         }
@@ -217,8 +217,8 @@ describe('ObjectType', function() {
     assert(o.fields.a.args);
     assert(o.fields.a.args.filter);
     assert.equal(o.fields.a.args.filter.type, '_object21_a_Filter');
-    assert(o.fields.a.args.orderBy);
-    assert.equal(o.fields.a.args.orderBy.type, '[_object21_a_OrderBy]');
+    assert(o.fields.a.args.sort);
+    assert.equal(o.fields.a.args.sort.type, '[_object21_a_sort]');
     assert.equal(o.fields.a.args.limit.type, 'Int');
     assert.equal(o.fields.a.args.limit.defaultValue, 100);
     assert.equal(o.fields.a.args.offset.type, 'Int');
@@ -232,7 +232,7 @@ describe('ObjectType', function() {
     assert.equal(o.fields.age_gt.type, 'int');
     assert.equal(o.fields.age_lt.type, 'int');
     assert.equal(o.fields.birth_date_btw.type, '[Date]');
-    o = def.typeDefs._object21_a_OrderBy;
+    o = def.typeDefs._object21_a_sort;
     assert(o);
     assert.equal(o.values.id.value, '+id');
     assert.equal(o.values.id_dsc, undefined);

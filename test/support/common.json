@@ -1,0 +1,24 @@
+{
+  "namespace": "common",
+  "typeDefs": {
+    "Query": {
+      "kind": "object",
+      "fields": {
+        "login": {
+          "type": "Boolean"
+        },
+        "hello": {
+          "type": "String",
+          "resolve": "hello"
+        },
+        "testfn": {
+          "type": "Int"
+        }
+      }
+    },
+    "UID": {
+      "kind": "scalar",
+      "description": "Unique id"
+    }
+  }
+}

@@ -1,7 +1,7 @@
-module.exports = (options) => {
+module.exports = (context) => {
   let authenticated;
 
-  const o = require('./schema1.json');
+  const o = Object.assign({}, require('./common.json'));
 
   Object.assign(o, {
 
@@ -21,11 +21,8 @@ module.exports = (options) => {
         login: () => {
           authenticated = true;
         },
-        lastEpisode: [
-          'authenticate',
-          () => 3],
         testfn: () => {
-          return options.intoption;
+          return context.intoption;
         }
       }
     },
@@ -48,5 +45,3 @@ module.exports = (options) => {
   return o;
 
 };
-
-
