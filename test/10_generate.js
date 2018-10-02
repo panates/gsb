@@ -9,6 +9,10 @@ describe('Schema generate', function() {
   let schema;
   let qlschema;
 
+  function execute(query) {
+    return graphql(qlschema, query, null, {});
+  }
+
   before(function() {
     return Schema.fromFile('./test/support/testapp.json', {context: {intoption: 1}})
         .then(sch => {
@@ -28,7 +32,7 @@ describe('Schema generate', function() {
   describe('should execute multi resolvers', function() {
 
     it('Should not call "lastEpisode" before authenticated', function(done) {
-      graphql(qlschema, '{lastEpisode}')
+      execute('{lastEpisode}')
           .then((v) => {
             if (v.errors && v.errors[0].message === 'Not authenticated')
               return done();
@@ -38,11 +42,13 @@ describe('Schema generate', function() {
     });
 
     it('Should call "authenticate"', function() {
-      return graphql(qlschema, '{login}');
+      return execute('{login}').then((v) => {
+        assert.equal(v.data.login, 'authenticated');
+      });
     });
 
     it('Should call "lastEpisode" after authenticated', function(done) {
-      graphql(qlschema, '{lastEpisode}')
+      execute('{lastEpisode}')
           .then((v) => {
             if (v.errors)
               return done(v.errors);
@@ -52,7 +58,7 @@ describe('Schema generate', function() {
     });
 
     it('Should call "hello"', function(done) {
-      graphql(qlschema, '{hello}')
+      execute('{hello}')
           .then((v) => {
             if (v.errors)
               return done(v.errors);
@@ -63,7 +69,7 @@ describe('Schema generate', function() {
     });
 
     it('Should call "heroes"', function(done) {
-      graphql(qlschema, '{ heroes {id, name, notes} }')
+      execute('{ heroes {id, name, notes} }')
           .then((v) => {
             if (v.errors)
               return done(v.errors);
@@ -77,7 +83,7 @@ describe('Schema generate', function() {
     });
 
     it('Should call "heroes" with filter', function(done) {
-      graphql(qlschema, '{ heroes(filter:{id: "1"}){id, name, notes} }')
+      execute('{ heroes(filter:{id: "1"}){id, name, notes} }')
           .then((v) => {
             if (v.errors)
               return done(v.errors);
@@ -92,7 +98,7 @@ describe('Schema generate', function() {
     });
 
     it('Should call "testfn" and return initializer options', function(done) {
-      graphql(qlschema, '{ testfn }')
+      execute('{ testfn }')
           .then((v) => {
             if (v.errors)
               return done(v.errors);

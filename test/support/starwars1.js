@@ -5,8 +5,12 @@ Object.assign(o, {
   resolvers: {
     Query: {
       lastEpisode: [
-        'authenticate',
-        () => 3]
+        'authorize',
+        (parent, v, ctx, info) => {
+          if (!ctx.authorized)
+            throw new Error('Authorization not called');
+          return 3;
+        }]
     }
   }
 

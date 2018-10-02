@@ -1,4 +1,5 @@
 module.exports = (context) => {
+
   let authenticated;
 
   const o = Object.assign({}, require('./common.json'));
@@ -18,8 +19,9 @@ module.exports = (context) => {
         }
       },
       Query: {
-        login: () => {
+        login: (parent, v, ctx, info) => {
           authenticated = true;
+          return 'authenticated';
         },
         testfn: () => {
           return context.intoption;
@@ -31,11 +33,12 @@ module.exports = (context) => {
       hello: () => {
         return 'world';
       },
-      authenticate: (parent, v, ctx, info) => {
+      authorize: (parent, v, ctx, info) => {
         if (!authenticated)
           throw new Error('Not authenticated');
         if (!info.modified)
           throw new Error('Info is not modified');
+        ctx.authorized = true;
       },
       ignoreThis: 123
     }

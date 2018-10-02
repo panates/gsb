@@ -83,7 +83,17 @@ describe('Schema', function() {
       throw e;
     }
   });
-
+  it('should not link if Schema namespace is null', function() {
+    const schema1 = new Schema('schema1');
+    const schema2 = new Schema();
+    try {
+      schema1.link(schema2);
+    } catch (e) {
+      if (e.message.includes('Schema must have a namespace to link'))
+        return;
+      throw e;
+    }
+  });
   it('should do nothing when linking an already linked schema', function() {
     const schema1 = new Schema('schema1');
     const schema2 = new Schema('schema2');

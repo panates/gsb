@@ -5,7 +5,7 @@
       "kind": "object",
       "fields": {
         "login": {
-          "type": "Boolean"
+          "type": "String"
         },
         "hello": {
           "type": "String",
