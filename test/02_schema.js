@@ -78,9 +78,9 @@ describe('Schema', function() {
     try {
       schema1.link(123);
     } catch (e) {
-      if (e.message.includes('You must proivde a Schema instance'))
+      if (e.message.includes('You must provide a Schema instance'))
         return;
-      throw e
+      throw e;
     }
   });
 
@@ -99,18 +99,6 @@ describe('Schema', function() {
       schema1.link(schema1);
     } catch (e) {
       if (e.message.includes('Can\'t link self'))
-        return;
-      throw e;
-    }
-    assert(0, 'failed');
-  });
-
-  it('should first argument of link() must be Schema instance', function() {
-    const schema1 = new Schema();
-    try {
-      schema1.link(123);
-    } catch (e) {
-      if (e.message.includes('You must proivde a Schema instance'))
         return;
       throw e;
     }
