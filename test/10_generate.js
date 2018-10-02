@@ -10,7 +10,7 @@ describe('Schema generate', function() {
   let qlschema;
 
   before(function() {
-    return Schema.fromFile('./test/support/testapp.json', null, {intoption: 1})
+    return Schema.fromFile('./test/support/testapp.json', {context: {intoption: 1}})
         .then(sch => {
           schema = sch;
         });

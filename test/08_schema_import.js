@@ -2,7 +2,6 @@
 
 const assert = require('assert');
 const path = require('path');
-const promisify = require('putil-promisify');
 const {Schema} = require('../index');
 
 describe('Schema import', function() {
@@ -146,7 +145,7 @@ describe('Schema import', function() {
   });
 
   it('should import schema from file', function() {
-    return Schema.fromFile('./test/support/starwars1')
+    return Schema.fromFile('starwars1', {rootPath: './test/support'})
         .then(schema1 => {
           const episode = schema1.getType('Episode');
           const query = schema1.getType('Query');
@@ -158,8 +157,12 @@ describe('Schema import', function() {
   });
 
   it('should manipulate filename using "readFile" option', function() {
-    return Schema.fromFile('./test/support/starwars1',
-        {readFile: (f) => path.resolve(__dirname, 'support', f)})
+    return Schema.fromFile('starwars1',
+        {
+          readFile: (f) => {
+            return path.resolve(__dirname, 'support', f);
+          }
+        })
         .then(schema1 => {
           const episode = schema1.getType('Episode');
           const query = schema1.getType('Query');
@@ -171,9 +174,28 @@ describe('Schema import', function() {
   });
 
   it('should return array of file names in "readFile"', function() {
-    return Schema.fromFile('./test/support/starwars1',
+    return Schema.fromFile('starwars1',
         {
-          readFile: (f) => [path.resolve(__dirname, 'support', f)]
+          readFile: (f) => {
+            return [path.resolve(__dirname, 'support', f)];
+          }
+        })
+        .then(schema1 => {
+          const episode = schema1.getType('Episode');
+          const query = schema1.getType('Query');
+          assert(episode);
+          assert(query);
+          assert.equal(episode.kind, 'enum');
+          assert.equal(query.kind, 'object');
+        });
+  });
+
+  it('should return array of objects in "readFile"', function() {
+    return Schema.fromFile('starwars1',
+        {
+          readFile: (f) => {
+            return [require(path.resolve(__dirname, 'support', f))];
+          }
         })
         .then(schema1 => {
           const episode = schema1.getType('Episode');
@@ -186,7 +208,7 @@ describe('Schema import', function() {
   });
 
   it('should load file using "readFile" option', function() {
-    return Schema.fromFile('./test/support/starwars1',
+    return Schema.fromFile('starwars1',
         {
           readFile: (f) => {
             return require(path.resolve(__dirname, path.join('support', f)));
@@ -205,8 +227,8 @@ describe('Schema import', function() {
   it('should load linked schemas', function() {
     return Schema.fromObject({
       namespace: 'tempschema',
-      links: './test/support/testapp.json'
-    }).then(schema => {
+      links: 'testapp.json'
+    }, {rootPath: './test/support/'}).then(schema => {
       assert.equal(schema.links.size, 1);
       assert.equal(schema.getSchema('tempschema'), schema);
       assert.equal(schema.getSchema('starwars1', true).namespace, 'starwars1');
@@ -243,16 +265,6 @@ describe('Schema import', function() {
         .then(() => done('Failed'))
         .catch(e => {
           if (e.message.includes('You must provide an object instance'))
-            return done();
-          return done(e);
-        });
-  });
-
-  it('should validate object has an "namespace" property in .fromObject()', function(done) {
-    Schema.fromObject({})
-        .then(() => done('Failed'))
-        .catch(e => {
-          if (e.message.includes('namespace'))
             return done();
           return done(e);
         });
