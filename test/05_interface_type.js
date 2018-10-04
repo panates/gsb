@@ -175,7 +175,7 @@ describe('InterfaceType', function() {
     });
 
     try {
-      const v = schema.items.get('interface20');
+      const v = schema.types.get('interface20');
       let o = v.export({format: Schema.EXPORT_GQL_SIMPLE});
     } catch (e) {
       return;

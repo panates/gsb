@@ -32,7 +32,7 @@ describe('ScalarType', function() {
       parseValue: () => {}
     });
     schema.addScalarType('scalar11');
-    const scalar1 = schema.items.get('scalar1');
+    const scalar1 = schema.types.get('scalar1');
     assert(scalar1);
     assert.equal(scalar1.kind, 'scalar');
     assert.equal(scalar1.description, 'scalar1 desc');

@@ -160,7 +160,7 @@ describe('InputObject', function() {
     });
 
     try {
-      const v = schema.items.get('input20');
+      const v = schema.types.get('input20');
       let o = v.export({format: 1});
     } catch (e) {
       return;

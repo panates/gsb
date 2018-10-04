@@ -268,7 +268,7 @@ describe('ObjectType', function() {
     schema.addObjectType('object20', {
       extends: 'enum1'
     });
-    const v = schema.items.get('object20');
+    const v = schema.types.get('object20');
     try {
       let o = schema.export({format: 1});
     } catch (e) {
@@ -282,7 +282,7 @@ describe('ObjectType', function() {
     schema.addObjectType('object20', {
       extends: 'enum_unknown'
     });
-    const v = schema.items.get('object20');
+    const v = schema.types.get('object20');
     try {
       let o = schema.export({format: 1});
     } catch (e) {
