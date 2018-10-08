@@ -15,7 +15,7 @@
     "generator"
   ],
   "dependencies": {
-    "errorex": "^1.0.6",
+    "errorex": "^2.0.1",
     "glob": "^7.1.3",
     "graphql": "^0.13.2",
     "putil-isplainobject": "^1.0.1",
