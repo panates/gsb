@@ -1,7 +1,7 @@
 {
   "name": "gsb",
   "description": "GSB",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "author": "Panates Ltd.",
   "contributors": [
     "Eray Hanoglu <e.hanoglu@panates.com>"
@@ -21,8 +21,8 @@
     "putil-isplainobject": "^1.0.1",
     "putil-merge": "^2.0.1",
     "putil-promisify": "^1.2.0",
-    "putil-walkdir": "^2.0.1",
-    "putil-waterfall": "^2.0.2"
+    "putil-walkdir": "^2.0.3",
+    "putil-waterfall": "^2.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
