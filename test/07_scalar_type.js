@@ -31,7 +31,6 @@ describe('ScalarType', function() {
       parseLiteral: () => {},
       parseValue: () => {}
     });
-    schema.addScalarType('scalar11');
     const scalar1 = schema.types.get('scalar1');
     assert(scalar1);
     assert.equal(scalar1.kind, 'scalar');

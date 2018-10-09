@@ -28,6 +28,8 @@
           "type": "[Character]",
           "filter": {
             "id": "String",
+            "name": null,
+            "appearsIn": null,
             "friends": {
               "type": "String",
               "op": [
