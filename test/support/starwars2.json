@@ -29,7 +29,6 @@
           "filter": {
             "id": "String",
             "name": null,
-            "appearsIn": null,
             "friends": {
               "type": "String",
               "op": [
@@ -113,6 +112,7 @@
       ],
       "fields": {
         "id": "UID!",
+        "name": null,
         "starships": "[Starship]",
         "totalCredits": "Float"
       }

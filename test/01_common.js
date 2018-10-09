@@ -194,26 +194,20 @@ describe('common', function() {
     });
 
     it('should call converter function when set any item', function() {
-      const m = new XMap((n, v) => {
-        return v + 1;
-      });
+      const m = new XMap((n, v) => (v + 1));
       m.set('a', 1);
       assert.equal(m.get('a'), 2);
     });
 
     it('should remove item when call set(name, undefined)', function() {
-      const m = new XMap((n, v) => {
-        return v !== undefined ? v + 1 : undefined;
-      });
+      const m = new XMap((n, v) => (v !== undefined ? v + 1 : undefined));
       m.set('a', 1);
       m.set('a', undefined);
       assert(!m.has('a'), 'Failed');
     });
 
     it('should call setAll() for batch operation', function() {
-      const m = new XMap((n, v) => {
-        return v !== undefined ? v + 1 : undefined;
-      });
+      const m = new XMap((n, v) => (v !== undefined ? v + 1 : undefined));
       m.setAll({a: 1, b: 2});
       assert.equal(m.get('a'), 2);
       assert.equal(m.get('b'), 3);
