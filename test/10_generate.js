@@ -1,8 +1,7 @@
 /* eslint-disable */
 const assert = require('assert');
-const path = require('path');
 const {Schema} = require('../index');
-const {graphql, GraphQLSchema, printSchema} = require('graphql');
+const {graphql, GraphQLSchema} = require('graphql');
 
 describe('Schema generate', function() {
 
@@ -14,10 +13,7 @@ describe('Schema generate', function() {
   }
 
   before(function() {
-    return Schema.fromFile('./test/support/testapp.json', {context: {intoption: 1}})
-        .then(sch => {
-          schema = sch;
-        });
+    schema = Schema.fromFile('./test/support/testapp.json', {context: {intoption: 1}});
   });
 
   it('should generate GraphQL schema', function() {
@@ -43,7 +39,7 @@ describe('Schema generate', function() {
 
     it('Should call "authenticate"', function() {
       return execute('{login}').then((v) => {
-        assert.equal(v.data.login, 'authenticated');
+        assert.strictEqual(v.data.login, 'authenticated');
       });
     });
 
@@ -62,7 +58,7 @@ describe('Schema generate', function() {
           .then((v) => {
             if (v.errors)
               return done(v.errors);
-            assert.equal(v.data.hello, 'world');
+            assert.strictEqual(v.data.hello, 'world');
             done();
           })
           .catch((err) => done('Failed:' + err.message));
@@ -74,9 +70,9 @@ describe('Schema generate', function() {
             if (v.errors)
               return done(v.errors);
             assert(v.data.heroes);
-            assert.equal(v.data.heroes.length, 2);
-            assert.equal(v.data.heroes[1].id, 2);
-            assert.equal(v.data.heroes[1].notes, 2);
+            assert.strictEqual(v.data.heroes.length, 2);
+            assert.strictEqual(v.data.heroes[1].id, 2);
+            assert.strictEqual(v.data.heroes[1].notes, '2');
             done();
           })
           .catch((err) => done('Failed:' + err.message));
@@ -88,10 +84,10 @@ describe('Schema generate', function() {
             if (v.errors)
               return done(v.errors);
             assert(v.data.heroes);
-            assert.equal(v.data.heroes.length, 1);
-            assert.equal(v.data.heroes[0].id, 1);
-            assert.equal(v.data.heroes[0].name, 'Luke Skywalker');
-            assert.equal(v.data.heroes[0].notes, 1);
+            assert.strictEqual(v.data.heroes.length, 1);
+            assert.strictEqual(v.data.heroes[0].id, 1);
+            assert.strictEqual(v.data.heroes[0].name, 'Luke Skywalker');
+            assert.strictEqual(v.data.heroes[0].notes, '1');
             done();
           })
           .catch((err) => done('Failed:' + err.message));
@@ -103,7 +99,7 @@ describe('Schema generate', function() {
             if (v.errors)
               return done(v.errors);
             assert(v.data.testfn);
-            assert.equal(v.data.testfn, 1);
+            assert.strictEqual(v.data.testfn, 1);
             done();
           })
           .catch((err) => done(err));

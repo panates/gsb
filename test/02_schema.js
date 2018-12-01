@@ -1,8 +1,6 @@
 /* eslint-disable */
 
 const assert = require('assert');
-const path = require('path');
-const promisify = require('putil-promisify');
 const {Schema} = require('../index');
 
 describe('Schema', function() {
@@ -19,7 +17,7 @@ describe('Schema', function() {
         b: 2
       }
     });
-    assert.equal(schema.getType('enum1').kind, 'enum');
+    assert.strictEqual(schema.getType('enum1').kind, 'enum');
   });
 
   it('should add input type', function() {
@@ -29,7 +27,7 @@ describe('Schema', function() {
         a: 'Float'
       }
     });
-    assert.equal(schema.getType('input2').kind, 'input');
+    assert.strictEqual(schema.getType('input2').kind, 'input');
   });
 
   it('should add interface type', function() {
@@ -39,7 +37,7 @@ describe('Schema', function() {
         a: 'Int'
       }
     });
-    assert.equal(schema.getType('interface1').kind, 'interface');
+    assert.strictEqual(schema.getType('interface1').kind, 'interface');
   });
 
   it('should add object type', function() {
@@ -49,7 +47,7 @@ describe('Schema', function() {
         a: 'Int'
       }
     });
-    assert.equal(schema1.getType('object1').kind, 'object');
+    assert.strictEqual(schema1.getType('object1').kind, 'object');
   });
 
   it('should add scalar type', function() {
@@ -57,62 +55,49 @@ describe('Schema', function() {
     schema.addScalarType('scalar1', {
       serialize: () => {}
     });
-    assert.equal(schema.getType('scalar1').kind, 'scalar');
+    assert.strictEqual(schema.getType('scalar1').kind, 'scalar');
   });
 
   it('should add call', function() {
     const schema = new Schema();
     schema.addCall('call1', () => true);
-    assert.equal(typeof schema.getCall('call1'), 'function');
+    assert.strictEqual(typeof schema.getCall('call1'), 'function');
   });
 
   it('should link other schema', function() {
     const schema1 = new Schema('schema1');
     const schema2 = new Schema('schema2');
     schema2.link(schema1);
-    assert.equal(schema2.getSchema('schema1'), schema1);
+    assert.strictEqual(schema2.getSchema('schema1'), schema1);
   });
 
   it('should not link other than Schema instance', function() {
     const schema1 = new Schema('schema1');
-    try {
+    assert.throws(() => {
       schema1.link(123);
-    } catch (e) {
-      if (e.message.includes('You must provide a Schema instance'))
-        return;
-      throw e;
-    }
+    }, /You must provide a Schema instance/);
   });
   it('should not link if Schema namespace is null', function() {
     const schema1 = new Schema('schema1');
     const schema2 = new Schema();
-    try {
+    assert.throws(() => {
       schema1.link(schema2);
-    } catch (e) {
-      if (e.message.includes('Schema must have a namespace to link'))
-        return;
-      throw e;
-    }
+    }, /Schema must have a namespace to link/);
   });
   it('should do nothing when linking an already linked schema', function() {
     const schema1 = new Schema('schema1');
     const schema2 = new Schema('schema2');
     schema2.link(schema1);
     schema2.link(schema1);
-    assert.equal(schema2.getSchema('schema1'), schema1);
-    assert.equal(schema2.links.size, 1);
+    assert.strictEqual(schema2.getSchema('schema1'), schema1);
+    assert.strictEqual(schema2.links.size, 1);
   });
 
   it('should not link itself', function() {
     const schema1 = new Schema('schema1');
-    try {
+    assert.throws(() => {
       schema1.link(schema1);
-    } catch (e) {
-      if (e.message.includes('Can\'t link self'))
-        return;
-      throw e;
-    }
-    assert(0, 'failed');
+    }, /Can't link self/);
   });
 
   it('should not use a namespace second time when linking', function() {
@@ -120,77 +105,49 @@ describe('Schema', function() {
     const schema2 = new Schema('schema2');
     const schema3 = new Schema('schema2');
     schema1.link(schema2);
-    try {
+    assert.throws(() => {
       schema1.link(schema3);
-    } catch (e) {
-      if (e.message.includes('A schema with same name'))
-        return;
-      throw e;
-    }
-    assert(0, 'failed');
+    }, /with same name/);
   });
 
   it('should addCall() accepts functions only', function() {
-    try {
+    assert.throws(() => {
       const schema1 = new Schema();
       schema1.addCall('call1', true);
-    } catch (e) {
-      if (e.message.includes('You must provide function instance'))
-        return;
-      throw e;
-    }
-    assert(0, 'Failed');
+    }, /You must provide function instance/);
   });
 
   it('should not add call more than one', function() {
     const schema1 = new Schema();
     schema1.addCall('call1', () => true);
-    try {
+    assert.throws(() => {
       schema1.addCall('call1', () => true);
-    } catch (e) {
-      if (e.message.includes('already exists'))
-        return;
-      throw e;
-    }
-    assert(0, 'Failed');
+    }, /already exists/);
   });
 
   it('should find a "type" recursively', function() {
     const schema1 = new Schema('schema1');
-    const schema2 = new Schema('schema2');
     schema1.addObjectType('object1', {
       fields: {
         a: 'Int'
       }
     });
     const object1 = schema1.getType('object1', true);
-    assert.equal(object1.kind, 'object');
+    assert.strictEqual(object1.kind, 'object');
   });
 
   it('should find a "call" recursively', function() {
     const schema1 = new Schema('schema1');
-    const schema2 = new Schema('schema2');
     schema1.addCall('call1', () => 0);
     const call1 = schema1.getCall('call1', true);
-    assert.equal(typeof call1, 'function');
+    assert.strictEqual(typeof call1, 'function');
   });
 
-  it('should import return Promise', function() {
-    const schema = new Schema();
-    const promise = schema.import(require('./support/common.json'));
-    assert(promisify.isPromise(promise), 'Failed');
-    return promise;
-  });
-
-  it('should validate argument for import() function', function(done) {
+  it('should validate argument for import() function', function() {
     const schema1 = new Schema();
-    schema1.import(123)
-        .then(() => done('Failed'))
-        .catch(e => {
-          if (e.message.includes('You must provide an object instance'))
-            return done();
-          throw done(e);
-        });
+    assert.throws(() => {
+      schema1.import(123);
+    }, /You must provide an object instance/);
   });
 
 });
