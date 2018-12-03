@@ -1,27 +1,21 @@
 /* eslint-disable */
 const assert = require('assert');
-const {Schema} = require('../index');
+const {SchemaBuilder} = require('../index');
 
 describe('ObjectType', function() {
 
-  const schema = new Schema();
+  const schema = new SchemaBuilder();
 
   it('should check name argument', function() {
-    try {
+    assert.throws(() => {
       schema.addObjectType('', {});
-    } catch (e) {
-      return;
-    }
-    assert(0, 'Failed');
+    }, /Invalid type name/);
   });
 
   it('should check config argument', function() {
-    try {
+    assert.throws(() => {
       schema.addObjectType('object1');
-    } catch (e) {
-      return;
-    }
-    assert(0, 'Failed');
+    }, /You must provide configuration object/);
   });
 
   it('should create object type', function() {
@@ -103,64 +97,54 @@ describe('ObjectType', function() {
     });
 
     let v = schema.getType('object1');
-    assert.equal(v.kind, 'object');
-    assert.equal(v.description, 'object1 desc');
-    assert.equal(v.fields.size, 3);
-    assert.equal(v.fields.get('a').type, 'Int');
-    assert.equal(v.fields.get('a').name, 'a');
-    assert.equal(v.fields.get('b').type, 'String');
-    assert.equal(v.fields.get('b').description, 'desc');
-    assert.equal(v.fields.get('b').deprecationReason, 'dept');
-    assert.equal(v.isTypeOf(), 'one');
+    assert.strictEqual(v.kind, 'object');
+    assert.strictEqual(v.description, 'object1 desc');
+    assert.strictEqual(v.fields.size, 3);
+    assert.strictEqual(v.fields.get('a').type, 'Int');
+    assert.strictEqual(v.fields.get('a').name, 'a');
+    assert.strictEqual(v.fields.get('b').type, 'String');
+    assert.strictEqual(v.fields.get('b').description, 'desc');
+    assert.strictEqual(v.fields.get('b').deprecationReason, 'dept');
+    assert.strictEqual(v.isTypeOf(), 'one');
     v = schema.getType('object10');
-    assert.equal(v.extends, 'object1');
+    assert.strictEqual(v.extends, 'object1');
     v = schema.getType('object11');
-    assert.deepEqual(v.extends, ['object1', 'object2']);
+    assert.deepStrictEqual(v.extends, ['object1', 'object2']);
     v = schema.getType('object4');
-    assert.equal(v.extension, true);
+    assert.strictEqual(v.extension, true);
   });
 
   it('should not allow duplicates', function() {
-    try {
+    assert.throws(() => {
       schema.addObjectType('object1', {fields: {a: 'Int'}});
-    } catch (e) {
-      if (e.message.includes('already exists'))
-        return;
-      throw e;
-    }
-    assert(0, 'Failed');
+    }, /already exists/);
   });
 
   it('should validate field name', function() {
-    try {
+    assert.throws(() => {
       schema.addObjectType('object3', {fields: {'1a': 'Int'}});
-    } catch (e) {
-      if (e.message.includes('Invalid'))
-        return;
-      throw e;
-    }
-    assert(0, 'Failed');
+    }, /Invalid field name/);
   });
 
   it('should export (EXPORT_GSB) - 1', function() {
-    const def = schema.export({format: Schema.EXPORT_GSB});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GSB});
     const o = def.typeDefs.object1;
-    assert.equal(o.kind, 'object');
-    assert.equal(o.description, 'object1 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'object');
+    assert.strictEqual(o.description, 'object1 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       e: {type: '[Int!]'}
     });
-    assert.equal(typeof o.isTypeOf, 'function');
+    assert.strictEqual(typeof o.isTypeOf, 'function');
   });
 
   it('should export (EXPORT_GSB) - 2', function() {
-    const def = schema.export({format: Schema.EXPORT_GSB});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GSB});
     const o = def.typeDefs.object10;
-    assert.equal(o.kind, 'object');
-    assert.equal(o.description, 'object10 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'object');
+    assert.strictEqual(o.description, 'object10 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {description: 'desc a', resolve: o.fields.a.resolve},
       b: {resolve: o.fields.b.resolve},
       f: {type: '[Int]!'},
@@ -169,20 +153,20 @@ describe('ObjectType', function() {
   });
 
   it('should export (EXPORT_GSB) - 3', function() {
-    const def = schema.export({format: Schema.EXPORT_GSB});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GSB});
     const o = def.typeDefs.object11;
-    assert.equal(o.kind, 'object');
-    assert.equal(o.description, 'object11 desc');
-    assert.equal(o.fields, undefined);
+    assert.strictEqual(o.kind, 'object');
+    assert.strictEqual(o.description, 'object11 desc');
+    assert.strictEqual(o.fields, undefined);
   });
 
   it('should export (EXPORT_GQL_SIMPLE) - 1', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
     const o = def.typeDefs.object10;
-    assert.equal(o.kind, 'object');
-    assert.equal(o.description, 'object10 desc');
-    assert.deepEqual(o.interfaces, ['interface1']);
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'object');
+    assert.strictEqual(o.description, 'object10 desc');
+    assert.deepStrictEqual(o.interfaces, ['interface1']);
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int', description: 'desc a', resolve: o.fields.a.resolve},
       b: {
         type: 'String', description: 'desc', deprecationReason: 'dept',
@@ -192,75 +176,75 @@ describe('ObjectType', function() {
       f: {type: '[Int]!'},
       h: {type: '[String!]!', resolve: o.fields.h.resolve}
     });
-    assert.equal(typeof o.isTypeOf, 'function');
+    assert.strictEqual(typeof o.isTypeOf, 'function');
   });
 
   it('should export (EXPORT_GQL_SIMPLE) - 2', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
     const o = def.typeDefs.object11;
-    assert.equal(o.kind, 'object');
-    assert.equal(o.description, 'object11 desc');
-    assert.deepEqual(o.interfaces, ['interface1']);
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'object');
+    assert.strictEqual(o.description, 'object11 desc');
+    assert.deepStrictEqual(o.interfaces, ['interface1']);
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       c: {type: 'Float', args: {arg1: {type: 'Integer'}}},
       e: {type: '[Int!]'}
     });
-    assert.equal(typeof o.isTypeOf, 'function');
+    assert.strictEqual(typeof o.isTypeOf, 'function');
   });
 
   it('should export (EXPORT_GQL_SIMPLE) - 3', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
     let o = def.typeDefs.object21;
-    assert.equal(o.kind, 'object');
+    assert.strictEqual(o.kind, 'object');
     assert(o.fields.a.args);
     assert(o.fields.a.args.filter);
-    assert.equal(o.fields.a.args.filter.type, '_object21_a_Filter');
+    assert.strictEqual(o.fields.a.args.filter.type, '_object21_a_Filter');
     assert(o.fields.a.args.sort);
-    assert.equal(o.fields.a.args.sort.type, '[_object21_a_sort]');
-    assert.equal(o.fields.a.args.limit.type, 'Int');
-    assert.equal(o.fields.a.args.limit.defaultValue, 100);
-    assert.equal(o.fields.a.args.offset.type, 'Int');
+    assert.strictEqual(o.fields.a.args.sort.type, '[_object21_a_sort]');
+    assert.strictEqual(o.fields.a.args.limit.type, 'Int');
+    assert.strictEqual(o.fields.a.args.limit.defaultValue, 100);
+    assert.strictEqual(o.fields.a.args.offset.type, 'Int');
     o = def.typeDefs._object21_a_Filter;
     assert(o);
     assert(o.fields.id);
-    assert.equal(o.fields.id.type, 'int');
-    assert.equal(o.fields.name.type, 'string');
-    assert.equal(o.fields.name_like.type, 'string');
-    assert.equal(o.fields.age.type, 'int');
-    assert.equal(o.fields.age_gt.type, 'int');
-    assert.equal(o.fields.age_lt.type, 'int');
-    assert.equal(o.fields.birth_date_btw.type, '[Date]');
+    assert.strictEqual(o.fields.id.type, 'int');
+    assert.strictEqual(o.fields.name.type, 'string');
+    assert.strictEqual(o.fields.name_like.type, 'string');
+    assert.strictEqual(o.fields.age.type, 'int');
+    assert.strictEqual(o.fields.age_gt.type, 'int');
+    assert.strictEqual(o.fields.age_lt.type, 'int');
+    assert.strictEqual(o.fields.birth_date_btw.type, '[Date]');
     o = def.typeDefs._object21_a_sort;
     assert(o);
-    assert.equal(o.values.id.value, '+id');
-    assert.equal(o.values.id_dsc, undefined);
-    assert.equal(o.values.name.value, '+name');
-    assert.equal(o.values.name_dsc, undefined);
-    assert.equal(o.values.age.value, '+age');
-    assert.equal(o.values.age_dsc.value, '-age');
-    assert.equal(o.values.birth_date, undefined);
-    assert.equal(o.values.birth_date_dsc.value, '-birth_date');
+    assert.strictEqual(o.values.id.value, '+id');
+    assert.strictEqual(o.values.id_dsc, undefined);
+    assert.strictEqual(o.values.name.value, '+name');
+    assert.strictEqual(o.values.name_dsc, undefined);
+    assert.strictEqual(o.values.age.value, '+age');
+    assert.strictEqual(o.values.age_dsc.value, '-age');
+    assert.strictEqual(o.values.birth_date, undefined);
+    assert.strictEqual(o.values.birth_date_dsc.value, '-birth_date');
   });
 
   it('should export (EXPORT_GQL_PURE)', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_PURE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_PURE});
     const o = def.typeDefs.object10;
-    assert.equal(o.kind, 'object');
-    assert.equal(o.description, 'object10 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'object');
+    assert.strictEqual(o.description, 'object10 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int', description: 'desc a'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       e: {type: '[Int!]'},
       f: {type: '[Int]!'},
       h: {type: '[String!]!'}
     });
-    assert.equal(o.resolveType, undefined);
-    assert.equal(typeof def.resolvers.object10, 'object');
-    assert.equal(typeof def.resolvers.object10.__isTypeOf, 'function');
-    assert.equal(typeof def.resolvers.object10.a, 'function');
-    assert.equal(typeof def.resolvers.object10.b, 'function');
+    assert.strictEqual(o.resolveType, undefined);
+    assert.strictEqual(typeof def.resolvers.object10, 'object');
+    assert.strictEqual(typeof def.resolvers.object10.__isTypeOf, 'function');
+    assert.strictEqual(typeof def.resolvers.object10.a, 'function');
+    assert.strictEqual(typeof def.resolvers.object10.b, 'function');
   });
 
   it('should extend from object type only', function() {
@@ -268,34 +252,27 @@ describe('ObjectType', function() {
     schema.addObjectType('object20', {
       extends: 'enum1'
     });
-    const v = schema.types.get('object20');
-    try {
-      let o = schema.export({format: 1});
-    } catch (e) {
-      schema._types.delete('object20');
-      return;
-    }
-    assert(0, 'Failed');
+    schema.types.get('object20');
+    assert.throws(() => {
+      schema.export({format: 1});
+    }, /Can't extend object type/);
+    schema._types.delete('object20');
   });
 
   it('should extend from existing types only', function() {
     schema.addObjectType('object20', {
       extends: 'enum_unknown'
     });
-    const v = schema.types.get('object20');
-    try {
-      let o = schema.export({format: 1});
-    } catch (e) {
-      schema._types.delete('object20');
-      return;
-    }
-    assert(0, 'Failed');
+    schema.types.get('object20');
+    assert.throws(() => {
+      schema.export({format: 1});
+    }, /not found/);
+    schema._types.delete('object20');
   });
 
   it('should check if field.resolve property is Function or String', function() {
-
-    try {
-      schema.addObjectType('object21', {
+    assert.throws(() => {
+      schema.addObjectType('object25', {
         fields: {
           a: {
             type: 'Int',
@@ -303,21 +280,18 @@ describe('ObjectType', function() {
           }
         }
       });
-    } catch (e) {
-      try {
-        schema.addObjectType('object21', {
-          fields: {
-            a: {
-              type: 'Int',
-              resolve: [1]
-            }
+    }, /You must provide/);
+
+    assert.throws(() => {
+      schema.addObjectType('object25', {
+        fields: {
+          a: {
+            type: 'Int',
+            resolve: [1]
           }
-        });
-      } catch (e) {
-        return;
-      }
-    }
-    assert(0, 'Failed');
+        }
+      });
+    }, /You must provide /);
   });
 
 });

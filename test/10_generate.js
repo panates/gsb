@@ -1,9 +1,9 @@
 /* eslint-disable */
 const assert = require('assert');
-const {Schema} = require('../index');
+const {SchemaBuilder} = require('../index');
 const {graphql, GraphQLSchema} = require('graphql');
 
-describe('Schema generate', function() {
+describe('SchemaBuilder build', function() {
 
   let schema;
   let qlschema;
@@ -13,11 +13,12 @@ describe('Schema generate', function() {
   }
 
   before(function() {
-    schema = Schema.fromFile('./test/support/testapp.json', {context: {intoption: 1}});
+    schema = SchemaBuilder.fromFile('./test/support/testapp.json',
+        {context: {intoption: 1}});
   });
 
-  it('should generate GraphQL schema', function() {
-    qlschema = schema.generate({
+  it('should build GraphQL schema', function() {
+    qlschema = schema.build({
       resolve: (_, __, ctx, info) => {
         info.modified = true;
       }

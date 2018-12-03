@@ -6,10 +6,10 @@
  https://panates.github.io/gsb/
 */
 
-const Schema = require('./lib/Schema');
+const SchemaBuilder = require('./lib/SchemaBuilder');
 const {SchemaError} = require('./lib/errors');
 
 module.exports = {
-  Schema,
+  SchemaBuilder,
   SchemaError
 };

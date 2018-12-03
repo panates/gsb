@@ -1,27 +1,21 @@
 /* eslint-disable */
 const assert = require('assert');
-const {Schema} = require('../index');
+const {SchemaBuilder} = require('../index');
 
 describe('InterfaceType', function() {
 
-  const schema = new Schema();
+  const schema = new SchemaBuilder();
 
   it('should check name argument', function() {
-    try {
+    assert.throws(() => {
       schema.addInterfaceType('', {});
-    } catch (e) {
-      return;
-    }
-    assert(0, 'Failed');
+    }, /Invalid type name/);
   });
 
   it('should check config argument', function() {
-    try {
+    assert.throws(() => {
       schema.addInterfaceType('interface1');
-    } catch (e) {
-      return;
-    }
-    assert(0, 'Failed');
+    }, /You must provide configuration object/);
   });
 
   it('should create interface type', function() {
@@ -53,59 +47,49 @@ describe('InterfaceType', function() {
       extends: ['interface1', 'interface2']
     });
     let v = schema.getType('interface1');
-    assert.equal(v.kind, 'interface');
-    assert.equal(v.description, 'interface1 desc');
-    assert.equal(v.fields.size, 3);
-    assert.equal(v.fields.get('a').type, 'Int');
-    assert.equal(v.fields.get('b').type, 'String');
-    assert.equal(v.fields.get('b').description, 'desc');
-    assert.equal(v.fields.get('b').deprecationReason, 'dept');
-    assert.equal(v.resolveType(), 'one');
+    assert.strictEqual(v.kind, 'interface');
+    assert.strictEqual(v.description, 'interface1 desc');
+    assert.strictEqual(v.fields.size, 3);
+    assert.strictEqual(v.fields.get('a').type, 'Int');
+    assert.strictEqual(v.fields.get('b').type, 'String');
+    assert.strictEqual(v.fields.get('b').description, 'desc');
+    assert.strictEqual(v.fields.get('b').deprecationReason, 'dept');
+    assert.strictEqual(v.resolveType(), 'one');
     v = schema.getType('interface10');
-    assert.equal(v.extends, 'interface1');
+    assert.strictEqual(v.extends, 'interface1');
     v = schema.getType('interface11');
-    assert.deepEqual(v.extends, ['interface1', 'interface2']);
+    assert.deepStrictEqual(v.extends, ['interface1', 'interface2']);
   });
 
   it('should not allow duplicates', function() {
-    try {
+    assert.throws(() => {
       schema.addInterfaceType('interface1', {fields: {a: 'Int'}});
-    } catch (e) {
-      if (e.message.includes('already exists'))
-        return;
-      throw e;
-    }
-    assert(0, 'Failed');
+    }, /already exists/);
   });
 
   it('should validate value name', function() {
-    try {
+    assert.throws(() => {
       schema.addInterfaceType('interface3', {fields: {'1a': 'Int'}});
-    } catch (e) {
-      if (e.message.includes('Invalid'))
-        return;
-      throw e;
-    }
-    assert(0, 'Failed');
+    }, /Invalid field name/);
   });
 
   it('should export (EXPORT_GSB) - 1', function() {
-    const def = schema.export({format: Schema.EXPORT_GSB});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GSB});
     const o = def.typeDefs.interface1;
-    assert.equal(o.kind, 'interface');
-    assert.equal(o.description, 'interface1 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'interface');
+    assert.strictEqual(o.description, 'interface1 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       e: {type: 'Int'}
     });
-    assert.equal(typeof o.resolveType, 'function');
+    assert.strictEqual(typeof o.resolveType, 'function');
   });
 
   it('should export (EXPORT_GSB) - 2', function() {
-    const def = schema.export({format: Schema.EXPORT_GSB});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GSB});
     const o = def.typeDefs.interface10;
-    assert.deepEqual(o, {
+    assert.deepStrictEqual(o, {
       description: 'interface10 desc',
       kind: 'interface',
       extends: 'interface1',
@@ -114,9 +98,9 @@ describe('InterfaceType', function() {
   });
 
   it('should export (EXPORT_GSB) - 3', function() {
-    const def = schema.export({format: Schema.EXPORT_GSB});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GSB});
     const o = def.typeDefs.interface11;
-    assert.deepEqual(o, {
+    assert.deepStrictEqual(o, {
       description: 'interface11 desc',
       kind: 'interface',
       extends: ['interface1', 'interface2']
@@ -124,47 +108,47 @@ describe('InterfaceType', function() {
   });
 
   it('should export (EXPORT_GQL_SIMPLE) - 1', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
     const o = def.typeDefs.interface10;
-    assert.equal(o.kind, 'interface');
-    assert.equal(o.description, 'interface10 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'interface');
+    assert.strictEqual(o.description, 'interface10 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       e: {type: 'Int'},
       f: {type: 'Int'}
     });
-    assert.equal(typeof o.resolveType, 'function');
+    assert.strictEqual(typeof o.resolveType, 'function');
   });
 
   it('should export (EXPORT_GQL_SIMPLE) - 2', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
     const o = def.typeDefs.interface11;
-    assert.equal(o.kind, 'interface');
-    assert.equal(o.description, 'interface11 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'interface');
+    assert.strictEqual(o.description, 'interface11 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       c: {type: 'Float'},
       e: {type: 'Int'}
     });
-    assert.equal(typeof o.resolveType, 'function');
+    assert.strictEqual(typeof o.resolveType, 'function');
   });
 
   it('should export (EXPORT_GQL_PURE)', function() {
-    const def = schema.export({format: Schema.EXPORT_GQL_PURE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_PURE});
     const o = def.typeDefs.interface10;
-    assert.equal(o.kind, 'interface');
-    assert.equal(o.description, 'interface10 desc');
-    assert.deepEqual(o.fields, {
+    assert.strictEqual(o.kind, 'interface');
+    assert.strictEqual(o.description, 'interface10 desc');
+    assert.deepStrictEqual(o.fields, {
       a: {type: 'Int'},
       b: {type: 'String', description: 'desc', deprecationReason: 'dept'},
       e: {type: 'Int'},
       f: {type: 'Int'}
     });
-    assert.equal(o.resolveType, undefined);
-    assert.equal(typeof def.resolvers.interface10, 'object');
-    assert.equal(typeof def.resolvers.interface10.__resolveType, 'function');
+    assert.strictEqual(o.resolveType, undefined);
+    assert.strictEqual(typeof def.resolvers.interface10, 'object');
+    assert.strictEqual(typeof def.resolvers.interface10.__resolveType, 'function');
   });
 
   it('should extend from Interface type only', function() {
@@ -174,13 +158,11 @@ describe('InterfaceType', function() {
       extends: 'enum1'
     });
 
-    try {
+    assert.throws(() => {
       const v = schema.types.get('interface20');
-      let o = v.export({format: Schema.EXPORT_GQL_SIMPLE});
-    } catch (e) {
-      return;
-    }
-    assert(0, 'Failed');
+      v.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+    }, /export is not a function/);
+
   });
 
 });

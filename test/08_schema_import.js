@@ -2,12 +2,12 @@
 
 const assert = require('assert');
 const path = require('path');
-const {Schema} = require('../index');
+const {SchemaBuilder} = require('../index');
 
 describe('Schema import', function() {
 
   it('should import types from json object', function() {
-    let schema1 = new Schema();
+    let schema1 = new SchemaBuilder();
     schema1.import({
       typeDefs: {
         UUID: {
@@ -44,12 +44,12 @@ describe('Schema import', function() {
   });
 
   it('should import() ignore if argument is null', function() {
-    let schema1 = new Schema();
+    let schema1 = new SchemaBuilder();
     return schema1.import(null);
   });
 
   it('should import resolvers from separate json', function() {
-    let schema1 = new Schema();
+    let schema1 = new SchemaBuilder();
     schema1.import({
       typeDefs: {
         UUID: {
@@ -113,7 +113,7 @@ describe('Schema import', function() {
   });
 
   it('should throw error when type not found for resolver', function() {
-    let schema = new Schema();
+    let schema = new SchemaBuilder();
     assert.throws(() => {
       schema.import({
         resolvers: {
@@ -126,7 +126,7 @@ describe('Schema import', function() {
   });
 
   it('should import "calls" from json object', function() {
-    let schschemama1 = new Schema();
+    let schschemama1 = new SchemaBuilder();
     schschemama1.import({
       calls: {
         call1: () => 1
@@ -138,7 +138,7 @@ describe('Schema import', function() {
   });
 
   it('should import schema from file', function() {
-    const schema1 = Schema.fromFile('starwars1', {rootPath: './test/support'});
+    const schema1 = SchemaBuilder.fromFile('starwars1', {rootPath: './test/support'});
     const episode = schema1.getType('Episode');
     const query = schema1.getType('Query');
     assert(episode);
@@ -148,7 +148,7 @@ describe('Schema import', function() {
   });
 
   it('should manipulate filename using "readFile" option', function() {
-    const schema = Schema.fromFile('starwars1', {
+    const schema = SchemaBuilder.fromFile('starwars1', {
       readFile: (f) => path.resolve(__dirname, 'support', f)
     });
     const episode = schema.getType('Episode');
@@ -160,7 +160,7 @@ describe('Schema import', function() {
   });
 
   it('should return array of file names in "readFile"', function() {
-    const schema = Schema.fromFile('starwars1', {
+    const schema = SchemaBuilder.fromFile('starwars1', {
       readFile: (f) => [path.resolve(__dirname, 'support', f)]
     });
     const episode = schema.getType('Episode');
@@ -172,7 +172,7 @@ describe('Schema import', function() {
   });
 
   it('should return array of objects in "readFile"', function() {
-    const schema = Schema.fromFile('starwars1', {
+    const schema = SchemaBuilder.fromFile('starwars1', {
       readFile: (f) => [require(path.resolve(__dirname, 'support', f))]
     });
     const episode = schema.getType('Episode');
@@ -184,7 +184,7 @@ describe('Schema import', function() {
   });
 
   it('should load file using "readFile" option', function() {
-    const schema = Schema.fromFile('starwars1', {
+    const schema = SchemaBuilder.fromFile('starwars1', {
       readFile: (f) => require(path.resolve(__dirname, path.join('support', f)))
     });
     const episode = schema.getType('Episode');
@@ -196,7 +196,7 @@ describe('Schema import', function() {
   });
 
   it('should load linked schemas', function() {
-    const schema = Schema.fromObject({
+    const schema = SchemaBuilder.fromObject({
       namespace: 'tempschema',
       links: 'testapp.json'
     }, {rootPath: './test/support/'});
@@ -211,19 +211,19 @@ describe('Schema import', function() {
 
   it('should validate argument is string in .fromFile(arg)', function() {
     assert.throws(() => {
-      Schema.fromFile(123);
+      SchemaBuilder.fromFile(123);
     }, /You must provide file path/);
   });
 
   it('should validate argument is string in .fromObject(arg)', function() {
     assert.throws(() => {
-      Schema.fromObject(123);
+      SchemaBuilder.fromObject(123);
     }, /You must provide an object instance/);
   });
 
   it('should validate file', function() {
     assert.throws(() => {
-      Schema.fromFile('./test/support/invalid_schema.js');
+      SchemaBuilder.fromFile('./test/support/invalid_schema.js');
     }, /Can't load schema file/);
   });
 

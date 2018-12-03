@@ -16,7 +16,7 @@ describe('common', function() {
 
       it('should parse: String', function() {
         const o = parseTypeString('String');
-        assert.equal(o.type, 'String');
+        assert.strictEqual(o.type, 'String');
         assert(!o.nonNull);
         assert(!o.list);
         assert(!o.nonNullItems);
@@ -24,7 +24,7 @@ describe('common', function() {
 
       it('should parse: String!', function() {
         const o = parseTypeString('String!');
-        assert.equal(o.type, 'String');
+        assert.strictEqual(o.type, 'String');
         assert(o.nonNull);
         assert(!o.list);
         assert(!o.nonNullItems);
@@ -32,28 +32,22 @@ describe('common', function() {
 
       it('should parse: [String!]!', function() {
         const o = parseTypeString('[String!]!');
-        assert.equal(o.type, 'String');
+        assert.strictEqual(o.type, 'String');
         assert(o.nonNull);
         assert(o.list);
         assert(o.nonNullItems);
       });
 
       it('should check empty arg', function() {
-        try {
+        assert.throws(() => {
           parseTypeString();
-        } catch (e) {
-          return;
-        }
-        assert(0, 'Failed');
+        }, /is not a valid type definition/);
       });
 
       it('should check valid arg', function() {
-        try {
+        assert.throws(() => {
           parseTypeString('[dfds');
-        } catch (e) {
-          return;
-        }
-        assert(0, 'Failed');
+        }, /is not a valid type definition/);
       });
     });
 
@@ -61,16 +55,16 @@ describe('common', function() {
 
       it('should parse: String', function() {
         const o = parseInputTypeString('String = 1');
-        assert.equal(o.type, 'String');
+        assert.strictEqual(o.type, 'String');
         assert(!o.nonNull);
         assert(!o.list);
         assert(!o.nonNullItems);
-        assert.equal(o.defaultValue, '1');
+        assert.strictEqual(o.defaultValue, 1);
       });
 
       it('should parse: String!', function() {
         const o = parseInputTypeString('String!');
-        assert.equal(o.type, 'String');
+        assert.strictEqual(o.type, 'String');
         assert(o.nonNull);
         assert(!o.list);
         assert(!o.nonNullItems);
@@ -78,37 +72,31 @@ describe('common', function() {
 
       it('should parse: [String!]!', function() {
         const o = parseInputTypeString('[String!]!');
-        assert.equal(o.type, 'String');
+        assert.strictEqual(o.type, 'String');
         assert(o.nonNull);
         assert(o.list);
         assert(o.nonNullItems);
       });
 
       it('should check empty arg', function() {
-        try {
+        assert.throws(() => {
           parseInputTypeString();
-        } catch (e) {
-          return;
-        }
-        assert(0, 'Failed');
+        }, /is not a valid type definition/);
       });
 
       it('should check valid arg', function() {
-        try {
+        assert.throws(() => {
           parseInputTypeString('[dfds');
-        } catch (e) {
-          return;
-        }
-        assert(0, 'Failed');
+        }, /is not a valid type definition/);
       });
     });
 
     describe('makeArray()', function() {
       it('test all', function() {
         let a = makeArray(null, 1, 2, [3, 4]);
-        assert.deepEqual(a, [1, 2, 3, 4]);
+        assert.deepStrictEqual(a, [1, 2, 3, 4]);
         a = makeArray([1], 2, [3, 4]);
-        assert.deepEqual(a, [1, 2, 3, 4]);
+        assert.deepStrictEqual(a, [1, 2, 3, 4]);
       });
     });
 
@@ -116,12 +104,12 @@ describe('common', function() {
 
       it('should return null if argument is empty', function() {
         let v = mergeCalls();
-        assert.equal(v, undefined);
+        assert.strictEqual(v, undefined);
         v = mergeCalls([]);
-        assert.equal(v, undefined);
+        assert.strictEqual(v, undefined);
       });
 
-      it('should call next till return a value', async function() {
+      it('should call next till return a value', function() {
         let i = 0;
         let fn = mergeCalls([
           () => {
@@ -131,54 +119,47 @@ describe('common', function() {
             i++;
             return 'OK';
           }]);
-        const v = await fn();
-        assert.equal(v, 'OK');
-        assert.equal(i, 2);
+        return fn().then(v => {
+          assert.strictEqual(v, 'OK');
+          assert.strictEqual(i, 2);
+        });
       });
 
-      it('should skip non function items', async function() {
+      it('should skip non function items', function() {
         let fn = mergeCalls([
           123,
           () => {
             return 'OK';
           }]);
-        const v = await fn();
-        assert.equal(v, 'OK');
+        return fn().then(v => {
+          assert.strictEqual(v, 'OK');
+        });
       });
 
-      it('should handle errors', async function() {
+      it('should handle errors', function() {
         let fn = mergeCalls([
           () => {
             throw new Error('Any error');
           }]);
-        try {
-          const v = await fn();
-        } catch (e) {
-          return;
-        }
-        assert(0, 'Failed');
+        return assert.rejects(() => fn());
       });
 
-      it('should handle promises', async function() {
+      it('should handle promises', function() {
         let fn = mergeCalls([
           () => {
             return new Promise(resolve => resolve('OK'));
           }]);
-        const v = await fn();
-        assert.equal(v, 'OK');
+        return fn().then(v => {
+          assert.strictEqual(v, 'OK');
+        });
       });
 
-      it('should handle promise errors', async function() {
+      it('should handle promise errors', function() {
         let fn = mergeCalls([
           () => {
             return new Promise((resolve, reject) => reject('OK'));
           }]);
-        try {
-          const v = await fn();
-        } catch (e) {
-          return;
-        }
-        assert(0, 'Failed');
+        return assert.rejects(() => fn());
       });
 
     });
@@ -190,13 +171,13 @@ describe('common', function() {
     it('should construct', function() {
       const m = new XMap();
       m.set('a', 1);
-      assert.equal(m.get('a'), 1);
+      assert.strictEqual(m.get('a'), 1);
     });
 
     it('should call converter function when set any item', function() {
       const m = new XMap((n, v) => (v + 1));
       m.set('a', 1);
-      assert.equal(m.get('a'), 2);
+      assert.strictEqual(m.get('a'), 2);
     });
 
     it('should remove item when call set(name, undefined)', function() {
@@ -209,22 +190,19 @@ describe('common', function() {
     it('should call setAll() for batch operation', function() {
       const m = new XMap((n, v) => (v !== undefined ? v + 1 : undefined));
       m.setAll({a: 1, b: 2});
-      assert.equal(m.get('a'), 2);
-      assert.equal(m.get('b'), 3);
+      assert.strictEqual(m.get('a'), 2);
+      assert.strictEqual(m.get('b'), 3);
     });
 
     it('should call setAll() with object argument only', function() {
       const m = new XMap();
-      try {
+      assert.throws(()=>{
         m.setAll([]);
-      } catch (e) {
-        try {
-          m.setAll('dfad');
-        } catch (e) {
-          return;
-        }
-      }
-      assert(0, 'Failed');
+      },/You must provide Object instance/);
+      assert.throws(()=>{
+        m.setAll('dfad');
+      },/You must provide Object instance/);
+
     });
 
   });

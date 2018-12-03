@@ -1,10 +1,10 @@
 /* eslint-disable */
 const assert = require('assert');
-const {Schema} = require('../index');
+const {SchemaBuilder} = require('../index');
 
 describe('EnumType', function() {
 
-  const schema = new Schema();
+  const schema = new SchemaBuilder();
 
   it('should validate type name', function() {
     try {
@@ -125,7 +125,7 @@ describe('EnumType', function() {
   });
 
   it('should export (EXPORT_GQL_SIMPLE)', function() {
-    const o = schema.export({format: Schema.EXPORT_GQL_SIMPLE});
+    const o = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
     assert.deepEqual(o.typeDefs.enum11, {
       description: 'enum11 desc',
       kind: 'enum',
