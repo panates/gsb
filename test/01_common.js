@@ -8,6 +8,9 @@ const {
 } = require('../lib/helpers');
 const XMap = require('../lib/XMap');
 
+assert.rejects = assert.rejects || rejects;
+assert.doesNotReject = assert.doesNotReject || doesNotReject;
+
 describe('common', function() {
 
   describe('helpers', function() {
