@@ -1,5 +1,6 @@
 /* eslint-disable */
 const assert = require('assert');
+const {rejects, doesNotReject} = require('rejected-or-not');
 const {
   parseInputTypeString,
   parseTypeString,
