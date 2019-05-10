@@ -109,8 +109,8 @@ describe('InputObject', function() {
     assert.deepStrictEqual(o.fields, undefined);
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 1', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 1', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.input10;
     assert.strictEqual(o.kind, 'input');
     assert.strictEqual(o.description, 'input10 desc');
@@ -123,8 +123,8 @@ describe('InputObject', function() {
     });
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 2', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 2', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.input11;
     assert.strictEqual(o.kind, 'input');
     assert.strictEqual(o.description, 'input11 desc');
@@ -144,7 +144,7 @@ describe('InputObject', function() {
     });
 
     assert.throws(() => {
-      const v = schema.types.get('input20');
+      const v = schema.types['input20'];
       v.export({format: 1});
     }, /export is not a function/);
   });

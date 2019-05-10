@@ -107,8 +107,8 @@ describe('InterfaceType', function() {
     });
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 1', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 1', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.interface10;
     assert.strictEqual(o.kind, 'interface');
     assert.strictEqual(o.description, 'interface10 desc');
@@ -121,8 +121,8 @@ describe('InterfaceType', function() {
     assert.strictEqual(typeof o.resolveType, 'function');
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 2', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 2', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.interface11;
     assert.strictEqual(o.kind, 'interface');
     assert.strictEqual(o.description, 'interface11 desc');
@@ -159,8 +159,8 @@ describe('InterfaceType', function() {
     });
 
     assert.throws(() => {
-      const v = schema.types.get('interface20');
-      v.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+      const v = schema.types['interface20'];
+      v.export({format: SchemaBuilder.EXPORT_GQL});
     }, /export is not a function/);
 
   });

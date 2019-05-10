@@ -16,8 +16,8 @@ describe('Schema export', function() {
     assert(Array.isArray(o.links), 'Failed');
   });
 
-  it('should export (EXPORT_GQL_SIMPLE)', function() {
-    const o = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL)', function() {
+    const o = schema.export({format: SchemaBuilder.EXPORT_GQL});
     assert.strictEqual(typeof o, 'object');
     assert.strictEqual(typeof o.typeDefs, 'object');
     assert(!o.links, 'Failed');

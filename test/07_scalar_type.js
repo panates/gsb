@@ -25,7 +25,7 @@ describe('ScalarType', function() {
       parseLiteral: () => {},
       parseValue: () => {}
     });
-    const scalar1 = schema.types.get('scalar1');
+    const scalar1 = schema.types['scalar1'];
     assert(scalar1);
     assert.strictEqual(scalar1.kind, 'scalar');
     assert.strictEqual(scalar1.description, 'scalar1 desc');
@@ -41,7 +41,7 @@ describe('ScalarType', function() {
   });
 
   it('should export (basic)', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.scalar1;
     assert.strictEqual(o.kind, 'scalar');
     assert.strictEqual(o.description, 'scalar1 desc');
@@ -49,7 +49,7 @@ describe('ScalarType', function() {
     assert.strictEqual(typeof o.parseValue, 'function');
   });
 
-  it('should export (EXPORT_GQL_SIMPLE)', function() {
+  it('should export (EXPORT_GQL)', function() {
     schema.addCall('scalar2.parseLiteral', () => true);
     schema.addCall('scalar2.parseValue', () => true);
     schema.addScalarType('scalar2', {
@@ -57,7 +57,7 @@ describe('ScalarType', function() {
       parseValue: 'scalar2.parseValue'
     });
 
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.scalar2;
     assert.strictEqual(typeof o.parseLiteral, 'function');
     assert.strictEqual(typeof o.parseValue, 'function');

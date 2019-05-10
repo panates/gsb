@@ -160,8 +160,8 @@ describe('ObjectType', function() {
     assert.strictEqual(o.fields, undefined);
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 1', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 1', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.object10;
     assert.strictEqual(o.kind, 'object');
     assert.strictEqual(o.description, 'object10 desc');
@@ -179,8 +179,8 @@ describe('ObjectType', function() {
     assert.strictEqual(typeof o.isTypeOf, 'function');
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 2', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 2', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     const o = def.typeDefs.object11;
     assert.strictEqual(o.kind, 'object');
     assert.strictEqual(o.description, 'object11 desc');
@@ -194,8 +194,8 @@ describe('ObjectType', function() {
     assert.strictEqual(typeof o.isTypeOf, 'function');
   });
 
-  it('should export (EXPORT_GQL_SIMPLE) - 3', function() {
-    const def = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
+  it('should export (EXPORT_GQL) - 3', function() {
+    const def = schema.export({format: SchemaBuilder.EXPORT_GQL});
     let o = def.typeDefs.object21;
     assert.strictEqual(o.kind, 'object');
     assert(o.fields.a.args);
@@ -252,22 +252,22 @@ describe('ObjectType', function() {
     schema.addObjectType('object20', {
       extends: 'enum1'
     });
-    schema.types.get('object20');
+    assert(schema.types['object20']);
     assert.throws(() => {
       schema.export({format: 1});
     }, /Can't extend object type/);
-    schema._types.delete('object20');
+    delete schema._types['object20'];
   });
 
   it('should extend from existing types only', function() {
     schema.addObjectType('object20', {
       extends: 'enum_unknown'
     });
-    schema.types.get('object20');
+    assert(schema.types['object20']);
     assert.throws(() => {
       schema.export({format: 1});
     }, /not found/);
-    schema._types.delete('object20');
+    delete schema._types['object20'];
   });
 
   it('should check if field.resolve property is Function or String', function() {

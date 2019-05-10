@@ -90,7 +90,6 @@ describe('SchemaBuilder', function() {
     schema2.link(schema1);
     schema2.link(schema1);
     assert.strictEqual(schema2.getSchema('schema1'), schema1);
-    assert.strictEqual(schema2.links.size, 1);
   });
 
   it('should not link itself', function() {

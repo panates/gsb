@@ -46,15 +46,15 @@ describe('EnumType', function() {
     schema.addEnumType('enum2', {});
     const enum1 = schema.getType('enum1');
     assert(enum1);
-    assert.equal(enum1.kind, 'enum');
-    assert.equal(enum1.toString(), '[object EnumType<enum1>]');
-    assert.equal(enum1.description, 'enum1 desc');
-    assert.equal(enum1.values.size, 2);
-    assert.equal(enum1.values.get('a').value, 1);
-    assert.equal(enum1.values.get('b').description, 'desc');
-    assert.equal(enum1.values.get('b').deprecationReason, 'dept');
+    assert.strictEqual(enum1.kind, 'enum');
+    assert.strictEqual(enum1.toString(), '[object EnumType<enum1>]');
+    assert.strictEqual(enum1.description, 'enum1 desc');
+    assert.strictEqual(enum1.values.size, 2);
+    assert.strictEqual(enum1.values.get('a').value, 1);
+    assert.strictEqual(enum1.values.get('b').description, 'desc');
+    assert.strictEqual(enum1.values.get('b').deprecationReason, 'dept');
     assert(enum1.owner === schema);
-    assert.equal(typeof enum1.toJSON(), 'object');
+    assert.strictEqual(typeof enum1.toJSON(), 'object');
   });
 
   it('should extend from other enum', function() {
@@ -67,11 +67,11 @@ describe('EnumType', function() {
     });
     const enum11 = schema.getType('enum11');
     assert(enum11);
-    assert.equal(enum11.kind, 'enum');
-    assert.equal(enum11.extends, 'enum1');
-    assert.equal(enum11.values.size, 1);
-    assert.equal(enum11.values.get('c').value, 3);
-    assert.equal(enum11.values.get('c').name, 'c');
+    assert.strictEqual(enum11.kind, 'enum');
+    assert.strictEqual(enum11.extends, 'enum1');
+    assert.strictEqual(enum11.values.size, 1);
+    assert.strictEqual(enum11.values.get('c').value, 3);
+    assert.strictEqual(enum11.values.get('c').name, 'c');
   });
 
   it('should not allow duplicates', function() {
@@ -98,7 +98,7 @@ describe('EnumType', function() {
 
   it('should export', function() {
     const o = schema.export();
-    assert.deepEqual(o.typeDefs.enum1, {
+    assert.deepStrictEqual(o.typeDefs.enum1, {
       description: 'enum1 desc',
       kind: 'enum',
       values: {
@@ -112,7 +112,7 @@ describe('EnumType', function() {
         }
       }
     });
-    assert.deepEqual(o.typeDefs.enum11, {
+    assert.deepStrictEqual(o.typeDefs.enum11, {
       description: 'enum11 desc',
       kind: 'enum',
       extends: 'enum1',
@@ -124,9 +124,9 @@ describe('EnumType', function() {
     });
   });
 
-  it('should export (EXPORT_GQL_SIMPLE)', function() {
-    const o = schema.export({format: SchemaBuilder.EXPORT_GQL_SIMPLE});
-    assert.deepEqual(o.typeDefs.enum11, {
+  it('should export (EXPORT_GQL)', function() {
+    const o = schema.export({format: SchemaBuilder.EXPORT_GQL});
+    assert.deepStrictEqual(o.typeDefs.enum11, {
       description: 'enum11 desc',
       kind: 'enum',
       values: {

@@ -200,7 +200,6 @@ describe('Schema import', function() {
       namespace: 'tempschema',
       links: 'testapp.json'
     }, {rootPath: './test/support/'});
-    assert.strictEqual(schema.links.size, 1);
     assert.strictEqual(schema.getSchema('tempschema'), schema);
     assert.strictEqual(schema.getSchema('starwars1', true).namespace, 'starwars1');
     assert.strictEqual(schema.getSchema('common', true).namespace, 'common');
