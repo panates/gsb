@@ -113,7 +113,12 @@
       "fields": {
         "id": "UID!",
         "name": null,
-        "starships": "[Starship]",
+        "starships": {
+          "type": "[Starship]",
+          "where": {
+            "name": "String"
+          }
+        },
         "totalCredits": "Float"
       }
     },
